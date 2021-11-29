@@ -82,6 +82,16 @@ export default class MyVueRouter {
                     e.preventDefault();
                 }
             }
+        });
+
+        // 实现 router-view
+        Vue.component('router-view', {
+            return(h) {
+                // 获取当前路径对应的组件
+                const component = this.$router.routerMap[this.$router.data.current];
+                // 转化为虚拟 DOM
+                return h(component);
+            }
         })
     }
 }
