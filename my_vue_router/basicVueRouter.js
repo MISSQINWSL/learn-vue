@@ -24,4 +24,64 @@ export default class MyVueRouter {
             }
         })
     }
+
+    // 构造函数
+    constructor(options) {
+        this.options = options; // routes
+        this.routerMap = {}; // 保存路由和组件的映射
+        this.data = _vue.observable({
+            // 当前路由的地址
+            current: '/',
+        })
+    }
+
+    // 解析路由规则
+    createRouterMap() {
+        this.options.routes.forEach(item => {
+            // 遍历 routes 添加到 routerMap
+            this.routerMap[item.path] = item.component;
+        })
+    }
+
+    initComponents(Vue) {
+        // 实现 router-link
+        Vue.component('router-link', {
+            props: {
+                to: String, // 将访问的地址
+            },
+
+            // 因为使用的是运行版的 Vue，无法渲染 template，所以额外写个 render
+            // 比如要渲染的 template 是这个: <a :href="to"><slot></slot></a>
+            render(h) {
+                // h函数的一参是标签，二参是标签里的属性对象
+                return h(
+                    'a',
+                    {
+                        attrs: {
+                            href: this.to
+                        },
+                        on: {
+                            // 重写点击函数，阻止点击时向服务器发送请求
+                            click: this.myClick
+                        },
+                    },
+                    // 渲染默认插槽
+                    [this.$slots.default]
+                )
+            },
+
+            methods: {
+                myClick(e) {
+                    // 模拟 histroy 的路由形式采用 pushState，如果模拟 hash 路由可采用 push
+                    // 使用 histroy 修改浏览器上的地址
+                    // pushState 一参是传递的参数，二参是页面标题，三参是页面标题
+                    history.pushState({}, '', this.to);
+                    // router-view 是根据 current 来渲染的，所以要做成响应式
+                    this.$router.data.current = this.to;
+                    // 阻止默认的跳转事件
+                    e.preventDefault();
+                }
+            }
+        })
+    }
 }
