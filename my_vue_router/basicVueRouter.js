@@ -3,6 +3,16 @@ let _Vue = null;
 
 // 自己实现的 VueRouter
 export default class MyVueRouter {
+    // 初始化
+    init() {
+        // 解析路由规则
+        this.createRouterMap();
+        // 初始化组件
+        this.initComponents();
+        // 初始化事件
+        this.initEvent();
+    }
+
     //  vue 提供 install 可供我们开发新的插件以及全局注册组件
     static install(Vue) {
         if (MyVueRouter.install.installed) {
@@ -20,6 +30,8 @@ export default class MyVueRouter {
                 if (this.$options.router) {
                     // 把 router 注册到 _Vue 上
                     _Vue.prototype.$router = this.$options.router;
+                    // 注册 router 后初始化
+                    this.$options.router.init();
                 }
             }
         })
@@ -94,4 +106,12 @@ export default class MyVueRouter {
             }
         })
     }
+
+    // 监听浏览器地址的变化
+    initEvent() {
+        window.addEventListener('popstate', () => {
+            // 改变 VueRouter 当前地址，重新渲染组件
+            this.data.current = window.location.pathname;
+        })
+    };
 }
