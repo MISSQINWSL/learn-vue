@@ -1,3 +1,4 @@
+import install from './install';
 export default class VueRouter {
     constructor(options) {
         // 获取 router 路由匹配规则
@@ -9,3 +10,6 @@ export default class VueRouter {
 
     }
 }
+
+// 为 VueRouter 添加 install 方法
+VueRouter.install = install;
