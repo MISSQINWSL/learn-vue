@@ -7,4 +7,12 @@ export default class History {
         // 默认当前的路径为 /
         this.current = createRoute(null, '/');
     }
+
+    // 跳转到的地址
+    transitionTo(path, onComplete) {
+        // 调用 Vue-router 里的 this.matcher 的 match 方法
+        this.current = this.router.matcher.match(path);
+        // 触发回调
+        onComplete && onComplete();
+    }
 }
