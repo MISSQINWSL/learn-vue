@@ -26,9 +26,16 @@ export default class VueRouter {
 
     // 初始化
     init(Vue) {
+        // 拿到模式的实例
         const history = this.history;
+        // 一参是 path 二参是回调函数
         history.transitionTo(history.getCurrentLocation, () => {
+            // 监听 URL 的变化，设置当前的 current
             history.setUpListener();            
+        });
+        // 修改响应式的 route
+        history.listen(route => {
+            Vue._route = route;
         })
     }
 }
