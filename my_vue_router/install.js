@@ -16,4 +16,19 @@ export default function install(Vue) {
             }
         }
     })
+
+    // 添加 $router 路由实例
+    Object.defineProperty(Vue.prototype, '$router', {
+        get() {
+            // this._routerRoot 即 Vue，它的 _router 是 Vue Router 实例
+            return this._routerRoot._router;
+        },
+    })
+
+    // 添加 $route 路由规则对象
+    Object.defineProperty(Vue.prototype, '$route', {
+        get() {
+            return this._routerRoot._route;
+        }
+    })
 }
