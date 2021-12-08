@@ -1,3 +1,6 @@
+import View from './components/view';
+import Link from './components/link';
+
 // 定义全局 Vue
 export let _Vue = null;
 
@@ -31,4 +34,8 @@ export default function install(Vue) {
             return this._routerRoot._route;
         }
     })
+
+    // 注册 Link 和 View
+    Vue.component('RouterView', View);
+    Vue.component('RouterLink', Link);
 }
