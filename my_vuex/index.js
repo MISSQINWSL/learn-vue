@@ -9,6 +9,40 @@ class Store {
         const mutations = options.mutations || {};
         const actions = options.actions || {};
         const getters = options.getters || {};
+
+        // 实现state：用 Vue 中的 observable 把 state 中的数据转为响应式
+        this.state = _Vue.observable(state);
+        // 实现getters：为 getters 里的每一个方法都添加一个 get
+
+        this.getters = Object.create(null);
+        // 使用数据劫持为 getters 添加 get 方法
+        Object.keys(getters).forEach(key => {
+            Object.defineProperty(this.getters, key, {
+                // 为 this.getters 每一项都添加一个 get 方法
+                get: () => {
+                    // 改变 getters 中的 this 指向
+                    return getters[key].call(this, this.state);
+                }
+            })
+        });
+
+        // 遍历 mutations 中的对象改变 this 指向
+        this.mutations = {};
+        Object.keys(mutations).forEach(key => {
+            this.mutations[key] = params => {
+                // 改变 mutations 中的 this 指向，默认传入 state
+                mutations[key].call(this, this.state, params);
+            }
+        });
+
+        // 遍历 actions 中的对象改变 this 指向
+        this.actions = {};
+        Object.keys(actions).forEach(key => {
+            this.actions[key] = params => {
+                // 改变 actions 中的 this 指向，默认传入 store 即 this
+                actions[key].call(this, this, params);
+            }
+        })
     }
 }
 
