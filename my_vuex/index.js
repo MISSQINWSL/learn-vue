@@ -4,7 +4,11 @@ let _Vue = null;
 // Store 类
 class Store {
     constructor(options) {
-        
+        // 给 state mutations actions getters 赋初值
+        const state = options.state || {};
+        const mutations = options.mutations || {};
+        const actions = options.actions || {};
+        const getters = options.getters || {};
     }
 }
 
