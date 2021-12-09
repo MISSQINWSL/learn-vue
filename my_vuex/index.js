@@ -44,6 +44,16 @@ class Store {
             }
         })
     }
+
+    // commit 用于触发 mutations 中的方法，一参是事件名，二参是传入的参数
+    commit = (eventName, params) => {
+        this.mutations[eventName](params);
+    }
+
+    // dispatch 用于触发 actions 中的异步方法，一参是事件名，二参是传入的参数
+    dispatch = (eventName, params) => {
+        this.actions[eventName](params);
+    }
 }
 
 // install 方法负责将 Vuex 可以被 Vue.use() 安装
