@@ -73,8 +73,73 @@ function install(Vue) {
     })
 }
 
+const mapState = params => {
+    if(!Array.isArray(params)) {
+        throw new Error('简略版只想处理数组参数');
+    }
+
+    const obj = {};
+    // 在 this.$store 中寻找传递过来的参数
+    params.forEach(item => {
+        obj[item] = function() {
+            return this.$store.state[item];
+        };
+    });
+
+    return obj;
+}
+
+const mapMutations = params => {
+    if (!Array.isArray(params)) {
+        throw new Error('简略版只想处理数组参数');
+    }
+
+    const obj = {};
+    // 在 this.$store 中寻找传递过来的参数
+    params.forEach(item => {
+        obj[item] = function(params) {
+            return this.$store.commit(item, params);
+        }
+    })
+
+    return obj;
+}
+
+const mapActions = params => {
+    if (!Array.isArray(params)) {
+        throw new Error('简略版只想处理数组参数');
+    }
+
+    const obj = {};
+    // 在 this.$store 中寻找传递过来的参数
+    params.forEach(item => {
+        obj[item] = function(params) {
+            return this.$store.dispatch(item, params);
+        }
+    })
+
+    return obj;
+}
+
+const mapGetters = params => {
+    if (!Array.isArray(params)) {
+        throw new Error('简略版只想处理数组参数');
+    }
+
+    const obj = {};
+    // 在 this.$store 中寻找传递过来的参数
+    params.forEach(item => {
+        obj[item] = function(params) {
+            return this.$store.getters(item);
+        }
+    })
+
+    return obj;
+}
+
 // 导出 install 和 Store
 export default {
     install,
     Store,
 }
+export { mapState, mapMutations, mapActions, mapGetters };
